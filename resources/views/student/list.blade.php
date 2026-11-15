@@ -1,23 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Students</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-</head>
-<body>
-
+<x-layouts.app title="Students">
     <h1>Students</h1>
 
-    <p class="nav">
-        <a href="/students">Students</a> |
-        <a href="/courses">Courses</a>
-    </p>
-
-    @if(session('success'))
-        <p class="alert alert-success">{{ session('success') }}</p>
-    @endif
-
-    <a href="/students/create" class="btn">Create Student</a>
+    <a href="{{ route('students.create') }}" class="btn">Create Student</a>
 
     <table>
         <thead>
@@ -37,37 +21,16 @@
                     <td>{{ $student->email }}</td>
                     <td>{{ $student->phone }}</td>
                     <td>
-                        <a href="/students/{{ $student->id }}" class="btn btn-secondary btn-sm">
-                            View
-                        </a>
-
-                        <a href="/students/{{ $student->id }}/edit" class="btn btn-secondary btn-sm">
-                            Edit
-                        </a>
-
-                        <form
-                            action="/students/{{ $student->id }}"
-                            method="POST"
-                            style="display:inline"
-                            onsubmit="return confirm('Delete this student? This cannot be undone.');"
-                        >
-                            @csrf
-                            @method('DELETE')
-
-                            <button type="submit" class="btn btn-danger btn-sm">
-                                Delete
-                            </button>
-                        </form>
+                        <a href="{{ route('students.show', $student) }}" class="btn btn-secondary btn-sm">View</a>
+                        <a href="{{ route('students.edit', $student) }}" class="btn btn-secondary btn-sm">Edit</a>
+                        <x-delete-form :action="route('students.destroy', $student)" />
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" class="empty">
-                        No students found.
-                    </td>
+                    <td colspan="5">No students found.</td>
                 </tr>
             @endforelse
         </tbody>
     </table>
-</body>
-</html>
+</x-layouts.app>

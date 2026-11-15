@@ -1,30 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Courses</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-</head>
-<body>
-
+<x-layouts.app title="Courses">
     <h1>Courses</h1>
 
-    <p class="nav">
-        <a href="/students">Students</a> |
-        <a href="/courses">Courses</a>
-    </p>
-
-    @if(session('success'))
-        <p class="alert alert-success">{{ session('success') }}</p>
-    @endif
-
-    <a href="/courses/create" class="btn">Create Course</a>
+    <a href="{{ route('courses.create') }}" class="btn">Create Course</a>
 
     <table>
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Name</th>
-                <th>Duration (weeks)</th>
+                <th>Duration</th>
                 <th>Fee</th>
                 <th>Difficulty</th>
                 <th>Active</th>
@@ -36,8 +20,8 @@
                 <tr>
                     <td>{{ $course->id }}</td>
                     <td>{{ $course->name }}</td>
-                    <td>{{ $course->duration }}</td>
-                    <td>{{ $course->fee }}</td>
+                    <td>{{ $course->duration }} weeks</td>
+                    <td>{{ number_format($course->fee, 2) }}</td>
                     <td>
                         <span class="badge badge-{{ strtolower($course->difficulty) }}">{{ $course->difficulty }}</span>
                     </td>
@@ -49,37 +33,16 @@
                         @endif
                     </td>
                     <td>
-                        <a href="/courses/{{ $course->id }}" class="btn btn-secondary btn-sm">
-                            View
-                        </a>
-
-                        <a href="/courses/{{ $course->id }}/edit" class="btn btn-secondary btn-sm">
-                            Edit
-                        </a>
-
-                        <form
-                            action="/courses/{{ $course->id }}"
-                            method="POST"
-                            style="display:inline"
-                            onsubmit="return confirm('Delete this course? This cannot be undone.');"
-                        >
-                            @csrf
-                            @method('DELETE')
-
-                            <button type="submit" class="btn btn-danger btn-sm">
-                                Delete
-                            </button>
-                        </form>
+                        <a href="{{ route('courses.show', $course) }}" class="btn btn-secondary btn-sm">View</a>
+                        <a href="{{ route('courses.edit', $course) }}" class="btn btn-secondary btn-sm">Edit</a>
+                        <x-delete-form :action="route('courses.destroy', $course)" />
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" class="empty">
-                        No courses found.
-                    </td>
+                    <td colspan="7">No courses found.</td>
                 </tr>
             @endforelse
         </tbody>
     </table>
-</body>
-</html>
+</x-layouts.app>
